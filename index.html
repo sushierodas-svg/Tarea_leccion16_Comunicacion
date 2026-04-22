@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarea Calificable - Lenguas del Mundo</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -221,9 +222,9 @@
                 
                 <p id="feedback-message" class="text-lg font-medium text-azuloscuro mb-6"></p>
 
-                <button onclick="descargarReporte()" class="no-print bg-azuloscuro hover:bg-naranja text-blanco font-bold py-3 px-6 rounded-xl shadow-md transition-all flex items-center justify-center mx-auto">
+                <button id="btn-descargar" onclick="descargarReporte()" class="no-print bg-azuloscuro hover:bg-naranja text-blanco font-bold py-3 px-6 rounded-xl shadow-md transition-all flex items-center justify-center mx-auto">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Descargar / Guardar PDF para Tutor
+                    Descargar Imagen (PNG) para Tutor
                 </button>
             </div>
 
@@ -368,18 +369,49 @@
         }
 
         function descargarReporte() {
-            // Cambiamos temporalmente el título para que al guardar PDF el nombre del archivo sea bonito
-            const nombre = document.getElementById('student-name').value;
-            const originalTitle = document.title;
-            document.title = `Reporte_Lenguaje_${nombre.replace(/\s+/g, '_')}`;
+            const nombre = document.getElementById('student-name').value || 'Estudiante';
+            const btn = document.getElementById('btn-descargar');
+            const originalText = btn.innerHTML;
             
-            // Disparar diálogo de impresión (que permite guardar como PDF)
-            window.print();
+            // Cambiar estado del botón visualmente
+            btn.innerHTML = '⏳ Generando imagen...';
+            btn.classList.add('opacity-50', 'cursor-wait');
             
-            // Restaurar título original
-            setTimeout(() => {
-                document.title = originalTitle;
-            }, 1000);
+            // Ocultar temporalmente los elementos que no queremos en la foto (instrucciones, botones)
+            const noPrintElements = document.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.style.display = 'none');
+
+            // Seleccionar el contenedor principal a capturar
+            const container = document.getElementById('main-container');
+
+            // Usar html2canvas para tomar la foto del contenedor
+            html2canvas(container, {
+                scale: 2, // Escala 2 para mejor calidad y nitidez
+                backgroundColor: '#ffffff' // Fondo blanco garantizado
+            }).then(canvas => {
+                // Restaurar los elementos ocultos
+                noPrintElements.forEach(el => el.style.display = '');
+
+                // Convertir la captura a una URL de imagen tipo PNG
+                const imgData = canvas.toDataURL('image/png');
+
+                // Crear un enlace invisible para forzar la descarga en el dispositivo
+                const link = document.createElement('a');
+                link.download = `Reporte_Lenguaje_${nombre.replace(/\s+/g, '_')}.png`;
+                link.href = imgData;
+                link.click();
+
+                // Restaurar el botón original
+                btn.innerHTML = originalText;
+                btn.classList.remove('opacity-50', 'cursor-wait');
+            }).catch(err => {
+                console.error("Error al generar la imagen", err);
+                // Si hay error, restaurar todo
+                noPrintElements.forEach(el => el.style.display = '');
+                btn.innerHTML = originalText;
+                btn.classList.remove('opacity-50', 'cursor-wait');
+                alert("Hubo un problema al generar la imagen. Por favor, intenta de nuevo.");
+            });
         }
     </script>
 </body>
