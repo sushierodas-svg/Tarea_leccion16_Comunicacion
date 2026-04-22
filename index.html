@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarea Calificable - Lenguas del Mundo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        naranja: '#db6015',
+                        amarillo: '#f7be00',
+                        azuloscuro: '#244b5a',
+                        rojo: '#993921',
+                        fondoclaro: '#f0f8ff',
+                        blanco: '#ffffff'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            color: #244b5a;
+        }
+
+        /* Estilos específicos para el reporte PDF/Impresión */
+        @media print {
+            body { background-color: #ffffff; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .print-container { 
+                box-shadow: none !important; 
+                border: none !important; 
+                margin: 0 !important; 
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+            .print-break { page-break-before: always; }
+            input { 
+                border: none !important; 
+                background: transparent !important; 
+                border-bottom: 1px solid #ccc !important;
+                border-radius: 0 !important;
+                padding-left: 0 !important;
+            }
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #db6015;
+            box-shadow: 0 0 0 3px rgba(219, 96, 21, 0.2);
+        }
+
+        .correct-input {
+            border-color: #10B981 !important;
+            background-color: #D1FAE5 !important;
+            color: #065F46 !important;
+        }
+
+        .incorrect-input {
+            border-color: #EF4444 !important;
+            background-color: #FEE2E2 !important;
+            color: #991B1B !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex justify-center items-start">
+
+    <div id="main-container" class="w-full max-w-3xl bg-blanco rounded-3xl shadow-xl overflow-hidden print-container border-t-8 border-naranja">
+        
+        <!-- Encabezado de la Tarea -->
+        <div class="p-8 bg-azuloscuro text-blanco text-center relative">
+            <div class="absolute top-4 left-4 text-amarillo font-bold text-sm tracking-widest uppercase">Escolaris</div>
+            <h1 class="text-3xl font-bold mt-4 mb-2">Tarea: Lenguas del Mundo 🌍</h1>
+            <p class="text-fondoclaro/80 text-lg">Comunicación y Lenguaje | 6° Primaria</p>
+        </div>
+
+        <div class="p-8">
+            <!-- Instrucciones -->
+            <div class="bg-amarillo/20 border-l-4 border-amarillo p-4 rounded-r-lg mb-8 no-print">
+                <h3 class="font-bold text-azuloscuro mb-2">📌 Instrucciones:</h3>
+                <ul class="list-disc pl-5 text-azuloscuro space-y-1">
+                    <li>Escribe tu nombre completo antes de empezar.</li>
+                    <li>Investiga y contesta las preguntas en los espacios indicados.</li>
+                    <li>Cuida tu ortografía (aunque el sistema entenderá respuestas sin tildes).</li>
+                    <li>Al terminar, haz clic en <strong>"Calificar Tarea"</strong> para ver tu punteo y generar el reporte para tu tutor.</li>
+                </ul>
+            </div>
+
+            <!-- Formulario del Estudiante -->
+            <div class="mb-8">
+                <label for="student-name" class="block font-bold text-azuloscuro mb-2 text-lg">👤 Nombre del estudiante:</label>
+                <input type="text" id="student-name" placeholder="Escribe tu nombre y apellido..." class="input-field w-full border-2 border-gray-300 rounded-xl p-3 text-lg" required>
+                <p id="name-error" class="text-rojo text-sm mt-1 hidden font-bold">Por favor, escribe tu nombre antes de calificar.</p>
+            </div>
+
+            <hr class="border-gray-200 mb-8">
+
+            <!-- PREGUNTA 1 -->
+            <div class="mb-10">
+                <div class="flex items-start mb-4">
+                    <span class="bg-naranja text-blanco font-bold w-8 h-8 rounded-full flex items-center justify-center mr-3 shrink-0">1</span>
+                    <h2 class="text-xl font-bold text-azuloscuro">Investiga: ¿Cuáles son las lenguas que tienen mayor difusión en el mundo?</h2>
+                </div>
+                <p class="text-gray-600 mb-4 ml-11">Menciona <strong>tres</strong> de los idiomas más hablados a nivel mundial:</p>
+                
+                <div class="ml-11 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <input type="text" id="q1-1" placeholder="Ej: Inglés" class="input-field w-full border-2 border-gray-300 rounded-xl p-3">
+                        <p id="fb-q1-1" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+                    <div>
+                        <input type="text" id="q1-2" placeholder="Ej: Español" class="input-field w-full border-2 border-gray-300 rounded-xl p-3">
+                        <p id="fb-q1-2" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+                    <div>
+                        <input type="text" id="q1-3" placeholder="Ej: Hindi" class="input-field w-full border-2 border-gray-300 rounded-xl p-3">
+                        <p id="fb-q1-3" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PREGUNTA 2 -->
+            <div class="mb-10">
+                <div class="flex items-start mb-4">
+                    <span class="bg-naranja text-blanco font-bold w-8 h-8 rounded-full flex items-center justify-center mr-3 shrink-0">2</span>
+                    <h2 class="text-xl font-bold text-azuloscuro">Escribe la lengua principal que se utiliza en cada uno de estos países:</h2>
+                </div>
+                
+                <div class="ml-11 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                    
+                    <!-- País 1 -->
+                    <div class="flex flex-col">
+                        <label class="font-semibold text-azuloscuro mb-1 flex items-center">🇨🇳 China:</label>
+                        <input type="text" id="p-china" class="input-field border-2 border-gray-300 rounded-xl p-2 w-full">
+                        <p id="fb-china" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+                    
+                    <!-- País 2 -->
+                    <div class="flex flex-col">
+                        <label class="font-semibold text-azuloscuro mb-1 flex items-center">🇫🇷 Francia:</label>
+                        <input type="text" id="p-francia" class="input-field border-2 border-gray-300 rounded-xl p-2 w-full">
+                        <p id="fb-francia" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+
+                    <!-- País 3 -->
+                    <div class="flex flex-col">
+                        <label class="font-semibold text-azuloscuro mb-1 flex items-center">🇯🇵 Japón:</label>
+                        <input type="text" id="p-japon" class="input-field border-2 border-gray-300 rounded-xl p-2 w-full">
+                        <p id="fb-japon" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+
+                    <!-- País 4 -->
+                    <div class="flex flex-col">
+                        <label class="font-semibold text-azuloscuro mb-1 flex items-center">🇨🇱 Chile:</label>
+                        <input type="text" id="p-chile" class="input-field border-2 border-gray-300 rounded-xl p-2 w-full">
+                        <p id="fb-chile" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+
+                    <!-- País 5 -->
+                    <div class="flex flex-col">
+                        <label class="font-semibold text-azuloscuro mb-1 flex items-center">🇨🇺 Cuba:</label>
+                        <input type="text" id="p-cuba" class="input-field border-2 border-gray-300 rounded-xl p-2 w-full">
+                        <p id="fb-cuba" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+
+                    <!-- País 6 -->
+                    <div class="flex flex-col">
+                        <label class="font-semibold text-azuloscuro mb-1 flex items-center">🇧🇷 Brasil:</label>
+                        <input type="text" id="p-brasil" class="input-field border-2 border-gray-300 rounded-xl p-2 w-full">
+                        <p id="fb-brasil" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+
+                    <!-- País 7 -->
+                    <div class="flex flex-col">
+                        <label class="font-semibold text-azuloscuro mb-1 flex items-center">🇮🇳 India:</label>
+                        <input type="text" id="p-india" class="input-field border-2 border-gray-300 rounded-xl p-2 w-full">
+                        <p id="fb-india" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+
+                    <!-- País 8 -->
+                    <div class="flex flex-col">
+                        <label class="font-semibold text-azuloscuro mb-1 flex items-center">🇦🇹 Austria:</label>
+                        <input type="text" id="p-austria" class="input-field border-2 border-gray-300 rounded-xl p-2 w-full">
+                        <p id="fb-austria" class="text-sm font-bold mt-1 hidden"></p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div id="action-buttons" class="mt-10 flex flex-col md:flex-row gap-4 justify-center no-print">
+                <button onclick="calificarTarea()" class="bg-naranja hover:bg-rojo text-blanco font-bold py-4 px-8 rounded-xl shadow-lg transition-all transform hover:scale-105 text-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Calificar Tarea
+                </button>
+            </div>
+
+            <!-- Área de Resultados (Oculta al inicio) -->
+            <div id="results-area" class="mt-10 hidden border-4 border-amarillo rounded-2xl p-6 bg-fondoclaro text-center relative">
+                <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-amarillo text-azuloscuro font-bold px-6 py-2 rounded-full shadow-md">
+                    Resultados Oficiales
+                </div>
+                
+                <h3 class="text-2xl font-bold text-azuloscuro mt-4" id="student-name-display"></h3>
+                
+                <div class="my-6 flex justify-center items-end space-x-2">
+                    <span class="text-6xl font-black text-naranja" id="score-display">0</span>
+                    <span class="text-2xl font-bold text-gray-500 mb-1">/ 11 pts</span>
+                </div>
+                
+                <p id="feedback-message" class="text-lg font-medium text-azuloscuro mb-6"></p>
+
+                <button onclick="descargarReporte()" class="no-print bg-azuloscuro hover:bg-naranja text-blanco font-bold py-3 px-6 rounded-xl shadow-md transition-all flex items-center justify-center mx-auto">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Descargar / Guardar PDF para Tutor
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- BASE DE DATOS DE RESPUESTAS ---
+        
+        // Pregunta 1: Idiomas más hablados válidos (Normalizados sin tildes ni mayúsculas)
+        const topIdiomas = ['ingles', 'chino', 'mandarin', 'chino mandarin', 'hindi', 'español', 'espanol', 'castellano', 'frances', 'arabe', 'bengali', 'ruso', 'portugues', 'urdu'];
+
+        // Pregunta 2: Idiomas por país
+        const respuestasPaises = {
+            'p-china': { validas: ['chino', 'mandarin', 'chino mandarin'], correctaDesc: 'Chino Mandarín' },
+            'p-francia': { validas: ['frances'], correctaDesc: 'Francés' },
+            'p-japon': { validas: ['japones'], correctaDesc: 'Japonés' },
+            'p-chile': { validas: ['español', 'espanol', 'castellano'], correctaDesc: 'Español' },
+            'p-cuba': { validas: ['español', 'espanol', 'castellano'], correctaDesc: 'Español' },
+            'p-brasil': { validas: ['portugues'], correctaDesc: 'Portugués' },
+            'p-india': { validas: ['hindi', 'ingles'], correctaDesc: 'Hindi o Inglés' },
+            'p-austria': { validas: ['aleman'], correctaDesc: 'Alemán' }
+        };
+
+        // --- FUNCIONES AUXILIARES ---
+
+        // Normaliza el texto: minúsculas, quita acentos, quita espacios extra
+        function normalizar(texto) {
+            return texto.toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .trim();
+        }
+
+        // --- LÓGICA DE CALIFICACIÓN ---
+
+        function calificarTarea() {
+            // 1. Validar nombre
+            const nombreInput = document.getElementById('student-name');
+            const errorNombre = document.getElementById('name-error');
+            
+            if (nombreInput.value.trim() === '') {
+                errorNombre.classList.remove('hidden');
+                nombreInput.classList.add('border-rojo', 'bg-red-50');
+                nombreInput.focus();
+                return;
+            }
+            errorNombre.classList.add('hidden');
+            nombreInput.classList.remove('border-rojo', 'bg-red-50');
+
+            // Congelar inputs
+            const inputs = document.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => input.readOnly = true);
+            document.getElementById('action-buttons').classList.add('hidden');
+
+            let punteoTotal = 0;
+            const maxPunteo = 11; // 3 de P1 + 8 de P2
+
+            // 2. Calificar Pregunta 1
+            const q1_inputs = ['q1-1', 'q1-2', 'q1-3'];
+            const idiomasIngresados = []; // Para evitar que repitan el mismo idioma 3 veces
+
+            q1_inputs.forEach(id => {
+                const inputEl = document.getElementById(id);
+                const fbEl = document.getElementById(`fb-${id}`);
+                const valor = normalizar(inputEl.value);
+
+                fbEl.classList.remove('hidden');
+
+                if (valor !== '' && topIdiomas.includes(valor) && !idiomasIngresados.includes(valor)) {
+                    // Correcto
+                    inputEl.classList.add('correct-input');
+                    fbEl.textContent = '✓ Correcto';
+                    fbEl.classList.add('text-green-600');
+                    idiomasIngresados.push(valor);
+                    punteoTotal++;
+                } else {
+                    // Incorrecto o repetido
+                    inputEl.classList.add('incorrect-input');
+                    fbEl.classList.add('text-red-600');
+                    if (idiomasIngresados.includes(valor)) {
+                        fbEl.textContent = '✗ Ya mencionaste este idioma.';
+                    } else {
+                        fbEl.textContent = '✗ No figura entre los más hablados o hay un error.';
+                    }
+                }
+            });
+
+            // 3. Calificar Pregunta 2
+            for (const [id, datos] of Object.entries(respuestasPaises)) {
+                const inputEl = document.getElementById(id);
+                // Extraemos el nombre del país quitando el "p-" para coincidir con el ID del feedback
+                const pais = id.replace('p-', ''); 
+                const fbEl = document.getElementById(`fb-${pais}`);
+                const valor = normalizar(inputEl.value);
+
+                fbEl.classList.remove('hidden');
+
+                if (valor !== '' && datos.validas.includes(valor)) {
+                    // Correcto
+                    inputEl.classList.add('correct-input');
+                    fbEl.textContent = '✓ ¡Bien hecho!';
+                    fbEl.classList.add('text-green-600');
+                    punteoTotal++;
+                } else {
+                    // Incorrecto
+                    inputEl.classList.add('incorrect-input');
+                    fbEl.classList.add('text-red-600');
+                    fbEl.textContent = `✗ La respuesta correcta era: ${datos.correctaDesc}`;
+                }
+            }
+
+            // 4. Mostrar Resultados
+            mostrarResultados(nombreInput.value, punteoTotal, maxPunteo);
+        }
+
+        function mostrarResultados(nombre, punteo, maxPunteo) {
+            const resultsArea = document.getElementById('results-area');
+            const nameDisplay = document.getElementById('student-name-display');
+            const scoreDisplay = document.getElementById('score-display');
+            const feedbackMsg = document.getElementById('feedback-message');
+
+            nameDisplay.textContent = `Estudiante: ${nombre}`;
+            scoreDisplay.textContent = punteo;
+
+            // Mensaje motivacional
+            const porcentaje = (punteo / maxPunteo) * 100;
+            if (porcentaje === 100) {
+                feedbackMsg.textContent = "¡Trabajo perfecto! Eres un experto en las lenguas del mundo. 🌟";
+            } else if (porcentaje >= 70) {
+                feedbackMsg.textContent = "¡Muy buen trabajo! Has demostrado mucho conocimiento. 👍";
+            } else {
+                feedbackMsg.textContent = "Sigue practicando. ¡Repasa la lección e inténtalo de nuevo en el futuro! 💪";
+            }
+
+            resultsArea.classList.remove('hidden');
+            
+            // Scroll suave hacia los resultados
+            setTimeout(() => {
+                resultsArea.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 300);
+        }
+
+        function descargarReporte() {
+            // Cambiamos temporalmente el título para que al guardar PDF el nombre del archivo sea bonito
+            const nombre = document.getElementById('student-name').value;
+            const originalTitle = document.title;
+            document.title = `Reporte_Lenguaje_${nombre.replace(/\s+/g, '_')}`;
+            
+            // Disparar diálogo de impresión (que permite guardar como PDF)
+            window.print();
+            
+            // Restaurar título original
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
